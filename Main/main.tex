@@ -1,0 +1,74 @@
+\documentclass{report}
+\usepackage{bookmark}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage[margin=2.7cm]{geometry} 
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{tocloft}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3} 
+
+\newcommand{\listequationsname}{Equations\vspace{-24pt}}
+\newlistof{myequations}{equ}{\listequationsname}
+
+\newcommand{\myequations}[1]{%
+  \addcontentsline{equ}{myequations}{\protect\numberline{\theequation}#1}
+}
+
+\renewcommand{\cftequtitlefont}{\cfttoctitlefont}
+\renewcommand{\cftafterequtitle}{\cftaftertoctitle}
+\setlength{\cftbeforeequtitleskip}{\cftbeforetoctitleskip}
+\setlength{\cftafterequtitleskip}{\cftaftertoctitleskip}
+
+\newcommand{\storeeq}[2]{%
+  \expandafter\gdef\csname eqtext@#1\endcsname{#2}%
+}
+
+\newcommand{\fullEqRef}[1]{%
+  \csname eqtext@#1\endcsname\ \eqref{#1}%
+}
+
+% Global tikz styles.
+\tikzset{
+    node distance=2.5cm,
+    startstop/.style={ellipse, draw},
+    process/.style={rectangle, draw},
+    decision/.style={diamond, draw, aspect=2},
+    arrow/.style={-{Latex}}
+}
+
+\begin{document}
+
+% First page
+\vspace*{256pt}
+\begin{center}
+    {\huge Paradise At War system documentation [Master]}\\[8pt]
+    {\large Bovi Duong and Samuel A. Kreis}\\[4pt]
+    \today
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+% Contents
+
+
+\newpage
+\include{introduction}
+\newpage
+\include{overview}
+\newpage
+\include{core components}
+\newpage
+\include{testing and debugging}
+\newpage
+\include{known issues and limitations}
+\newpage
+\include{appendices}
+
+\end{document}
