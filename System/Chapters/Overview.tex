@@ -1,20 +1,22 @@
-\chapter{High-level overview}
+\chapter{Overview}
+
+\section{High-level overview}
 For both the client and server, there exists only one entry point, which is either a local script or a server script. This means that the entry point must require other modules for core game logic. The requires are hard-coded, to be able to define order.
 %--------------------------
-\chapter{Shared Modules Overview}
+\section{Shared Modules Overview}
 Shared modules are both accessible to the server and client. They should be used for shared game logic, or shared data values. They should reside in the replicated storage.
 %--------------------------
-\chapter{Client System Overview}
+\section{Client System Overview}
 Client modules should reside in StarterPlayerScripts. The client scripts are those, which the server has no use for.
 Below is a high-level overview of the client sided architecture.
-\section{High-Level Architecture}
+\subsection{High-Level Architecture}
 \begin{itemize}
-    \item \textbf{Input handler}
-    \item \textbf{Character movement handler}
-    \item \textbf{Client replication handler}        
+    \item \textbf{Input handler}: Detects player inputs and fires the functions that are linked to the input.
+    \item \textbf{Character movement handler}: Moves the player's character according to the given inputs.
+    \item \textbf{Client replication handler}: Sends the client's positional data to the server, and updates itself on rollback. Also receives the messages from the server and displays other objects to the client, such as other player characters, projectiles or visual effects.
 \end{itemize}
-\section{Dependencies}
-\section{High-level diagram}
+\subsection{Dependencies}
+\subsection{High-level diagram}
 
 \begin{center}
 \resizebox{\textwidth}{!}{
@@ -25,16 +27,16 @@ Below is a high-level overview of the client sided architecture.
     \node[process, right=of InputHandler] (Cmove) 
     {Character movement handler};
     \node[process, right=of Cmove] (Crep){Client replication handler};
-    \node[process, right of=Crep]  (shandler){State handler};
+    \node[process, below of=Crep]  (shandler){State handler};
     % Arrows
 \end{tikzpicture}
 }
 \end{center}
 
 %--------------------------
-\chapter{Server System Overview}
+\section{Server System Overview}
 Server modules should reside in ServerScriptService. Server modules are those modules, which would be a security risk for the client to have access to, or those modules which the client has no use for.
-\section{High-Level Architecture}
-\section{Dependencies}
+\subsection{High-Level Architecture}
+\subsection{Dependencies}
 
 %--------------------------

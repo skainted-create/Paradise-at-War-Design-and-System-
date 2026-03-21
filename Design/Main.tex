@@ -1,0 +1,347 @@
+\documentclass{report}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage[margin=2.7cm]{geometry}  % Seitenränder auf 2.7 cm
+\usepackage[hidelinks]{hyperref}
+% THIS MF IS BREAKING MY STUFF AND RUINING MY DOCUMENT
+
+% ^ All propaganda ^ 
+
+% hell naw 
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3} % Nummerierung der Kapitel, -1 = keine, 0 = nur Kapitel, 1 = Kapitel & Sektionen usw.
+
+
+\usepackage{tocloft}
+
+\newcommand{\listequationsname}{Equations\vspace{-24pt}}
+\newlistof{myequations}{equ}{\listequationsname}
+
+\newcommand{\myequations}[1]{%
+  \addcontentsline{equ}{myequations}{\protect\numberline{\theequation}#1}
+}
+
+\renewcommand{\cftequtitlefont}{\cfttoctitlefont}
+\renewcommand{\cftafterequtitle}{\cftaftertoctitle}
+\setlength{\cftbeforeequtitleskip}{\cftbeforetoctitleskip}
+\setlength{\cftafterequtitleskip}{\cftaftertoctitleskip}
+
+\newcommand{\storeeq}[2]{%
+  \expandafter\gdef\csname eqtext@#1\endcsname{#2}%
+}
+
+\newcommand{\fullEqRef}[1]{%
+  \csname eqtext@#1\endcsname\ \eqref{#1}%
+}
+
+\begin{document}
+\vspace*{256pt}
+\begin{center}
+    {\huge Paradise At War design document}\\[8pt]
+    {\large Bovi Duong and Samuel A. Kreis}\\[4pt]
+    \today
+\end{center}
+
+\newpage
+
+\tableofcontents
+\listofmyequations
+
+\newpage
+
+\chapter{Introduction}
+
+Paradise at War is an MMO RPG with a focus on combat. Players pick from the two main factions at the start of the game and play in an endless war between the two main factions. The terrain of the game is generated procedurally to reduce repetitiveness.
+
+\chapter{Combat}
+
+
+
+\section{Combat introduction}
+
+The combat is mainly skill based. There are multiple types of combat, with the combat types being: melee, ranged and mounted. \\
+The player statistics are:
+
+\section{Combat Stats}
+    \subsection{Health}
+
+    \subsubsection{Health mechanics}
+         Represents your character’s physical condition. Your physical            condition will visibly be impaired when your health decreases.
+        Health for everyone is 100. The only possible way to survive more damage are defense increases. 
+
+    \subsubsection{Health regeneration}
+      Health regeneration in combat is 0 by default. Certain passives or abilities can apply in combat health regeneration. Out of combat health regeneration is 1.5\% every second.
+
+    \subsubsection{Health states}
+    \begin{itemize}
+        \item \textbf{Having health under 10\%:} Your character can barely stand and will fall unconscious soon if your health doesn't increase past 10\% in 20 seconds. If you lie on the floor for long enough, you will eventually regenerate past 10\% and stand up.
+        \item \textbf{Having health under 0\%:} You will immediately perish.
+    \end{itemize}
+
+    \subsubsection{Wounds} Each one of your limbs has a hidden health stat. The lower the stat the more penalties you will experience. Your wounds can be healed by using medical equipment.
+
+    \begin{itemize}
+        \item \textbf{Legs}: Starts limping once severely damage but only decreases speed.
+        \item \textbf{Arms}: Minor melee damage and more recoil and inaccuracy when damaged.
+        \item \textbf{Head}: Your ears will ring and your vision will be blurred upon taking a large amount of damage temporarily. 
+        \item \textbf{Torso}: More bleed upon taking damage.
+    \end{itemize}
+
+        Each limb has 20 health each, except for the torso with 25 health and the head with unlimited but a damage multiplier from ranged weapons.
+
+
+    
+    \subsection{Mana} Is separated into 10 "bubbles". Each ability will cost a certain a certain amount of "bubbles". There is a minimum of 0.3 bubbles per second. The rest of the bubble regeneration is affected by morale. The calculation is:
+    
+     Let $M$ denote the current level of morale converted into a standard number.
+    
+    \begin{equation}
+             0.3 + 0.7 \cdot \frac{M}{50} 
+     \end{equation}
+    \myequations{Mana Regeneration}
+    
+    \subsection{Morale}
+        \subsubsection{Morale mechanics} The base morale is 50\%. Morale linearly decreases your mana regeneration if below 50\% and increases it if above 50\%. The exact formula is defined above. Your morale naturally returns to 50\% over time, if your morale is above 50\% and you haven't gained any morale in the past 10 seconds. If your morale has not been decreased in the past 10 seconds and your morale is below 50\%, your morale will slowly return to 50\%.
+
+        \subsubsection{Events that decrease your morale}
+        \begin{itemize}
+            \item Having an ally die close to you.
+            \item In the event of taking damage.
+            \item If elite enemy soldiers spawn in. 
+            \item If elite enemy soldier is nearby. (Only if you are not an elite soldier yourself)
+        \end{itemize}
+
+        \subsubsection{Events that increase your morale}
+        \begin{itemize}
+            \item In the event of dealing damage.
+            \item Using a battle cry before combat.
+            \item Killing an enemy soldier or watching an enemy soldier be killed.
+            \item If allied elite soldiers are nearby.
+            \item If allied elite soldiers spawn in.
+        \end{itemize}
+    
+        \subsubsection{Morale mechanics for elite soldiers}
+        Elite soldiers have a minimum morale percentage of 65\%.
+    
+        \subsubsection{Morale visual effects}
+        Your screen will linearly change its saturation using your moral percentage.
+
+        \subsubsection{How morale interacts with abilities}
+        Certain abilities can affect your morale as well.
+        
+    
+        
+    \subsection{Blood} 
+    \subsubsection{Blood mechanics}
+    Health regeneration is multiplied by your current blood percentage. For example, at 50\% blood, you regenerate health at 50\% of the normal rate. Blood only regenerates slowly out of combat.
+    
+
+    \subsection{Resolve}
+    \subsubsection{Resolve mechanics}
+        Resolve is a very limited resource gained from dealing damage to enemies. Resolve is primarily used for ultimates.
+
+
+\section{Combat mechanics}
+    \subsection{Damage and defense calculations}
+
+          Defense values should be from 0-1. (0.2 = 20\% defense)
+          Let $D$ denote the incoming damage. 
+
+        \begin{equation}
+            DM = \text{Defense Multiplier} =  \prod_{i=1}^{n} 1 - DefenseValue_i
+        \end{equation}
+        \myequations{Defense Multiplier}
+        
+        \begin{equation}
+                 AM = \text{Attack Multiplier} = 1+ \sum_{i=1}^{n} DamageValue_i
+        \end{equation}
+        \myequations{Attack Multiplier}
+        
+        \begin{equation}
+            \text{Final Damage} = D \cdot AM \cdot DM
+        \end{equation}
+        \myequations{Final Damage} 
+
+        \subsubsection{External health-bars}
+        Damage will be dealt to external health-bars if present.
+
+        \subsubsection{Limb damage}
+        There is one more stat, limb damage. Limb damage will damage the specified limbs, it may be a predetermined limb, hit limb or a fixed set of limbs. Explosives / splash attacks will usually have lower limb damage.
+          
+    
+    \subsection{Attacking}
+
+        \subsubsection{Attack-levels and armor-levels}
+        Attacks have an "armor-level" and an "attack-level". The armor-level defines what level of attack is required to break the armor and cancel the ability. Hitting someone with an attack that is below their "armor-level" will cause your attack to still deal damage, but hit stun will not be applied.
+
+        \begin{itemize}
+            \item Standard attacks can be deflected by blocking.
+            \item  Red attacks will shatter guards.
+            \item Blue attacks will bypass dodges. 
+            \item Yellow attacks will bypass blocks and dodges. 
+        \end{itemize}
+
+        \subsubsection{Attack appearances}
+        The attack indicator is a medium sized glint with the attack type as it's color.
+
+        \subsubsection{Attack types}
+        There are two damage types, mana and physical. Physical attacks are strong against mana block but are weaker against normal blocks. Mana attacks will bypass normal blocking but will be easily deflected by mana block.
+    
+    \subsection{Blocking}
+
+        \subsubsection{Standard blocking}
+        Blocking will allow you to deflect  any block-able attack. Your block has a "block-health", which decreases on incoming hit damage.
+
+        \subsubsection{Mana blocking}
+        Mana blocking has an initial mana cost and will defend against magic attacks, but will quickly break from standard attacks. Letting go of your mana block will return the used mana. Having your mana block shattered will cause you to lose the used mana permanently.
+    
+    \subsection{Dodging}
+    
+        \subsubsection{Dodge function}
+        Pressing the dodge buttons directionally moves your character and grants immunity frames to all attacks except for  blue and yellow attacks. The dodge has a decent cool-down.
+    
+    \subsection{Armor}
+    \subsubsection{Armor types}
+        There are two types of armor, soft armor and solid armor. Soft armor cannot be broken and grants a defense boost, while solid armor grants a shield that decreases hit stun, prevents ragdoll and deflects attacks until the armor is broken.
+
+
+    
+    
+    \subsection{Load-outs}
+    You can carry an as many items as you want of every type, but every item costs weight. Having too little movement speed won't allow you to do anything at all.
+    Your armor, weapons and utility items all cost weight. It is advised for players to invest most of their weight into their armor and or weapons. 
+    Most players will prefer to have both a melee and a ranged weapon, but it is not required.
+    \subsection{Weight}
+            The default max weight is 20kg. Having more weight than your max weight will cause you to have a speed decrease that exponentially scales with your weight.
+            
+    \subsection{Soul}
+            Soul limits the amount of skill points and enchantments you can use.
+
+        
+    
+
+
+    
+
+    \subsection{Ultimate}
+        You can use 100\% of your resolve to obtain your boosted load-out. Your morale has a minimum percentage of 65\% while in ultimate, and your resolve will rapidly drain by 1\% every second. Your boosted load-out will usually contain solid armor and all of your abilities will be strengthened.
+\chapter{Progression}
+
+    %Remove classes?
+    \section{Classes}
+
+    \subsection{Infantry}
+    Passives:
+    \begin{itemize}
+        \item +30\% Weight 
+        \item +20\% Soul
+    \end{itemize}
+    Negatives:
+    \begin{itemize} 
+        \item None
+    \end{itemize}
+        
+    \subsection{Engineer}
+    Passives:
+    \begin{itemize}
+        \item Your armor weight is no longer accounted for when doing the speed penalty calculation for being over encumbered.
+        \item Building tools that allow you to carry building supplies and build structures. Building structures is time consuming, and carrying materials will cost you a lot of weight.
+        \item You are 15\% larger in size.
+    \end{itemize}
+    Negatives:
+    \begin{itemize} 
+        \item You can no longer use mounts.
+    \end{itemize}
+        
+    \subsection{Cavalry}
+        Passives:
+    \begin{itemize}
+        \item Unlock combat mounts
+    \end{itemize}
+    Negatives:
+    \begin{itemize} 
+        \item -20\% Weight. Your max weight is decreased to improve mount performance.
+    \end{itemize}
+        
+    \subsection{Officer}
+    Passives:
+    \begin{itemize}
+        \item Officer whistle that boosts the morale of your teammates around you.
+        \item Communications device to call in artillery strikes.
+    \end{itemize}
+    Negatives:
+    \begin{itemize} 
+        \item -20\% Weight. Your communications device is heavy.
+    \end{itemize}
+        
+    \subsection{Chemist}
+        \begin{itemize}
+        \item Chemical compounds that allow you to make very unique combinations for any situation. Mixed chemicals expire quickly, so you must make use of them quickly. Chemicals take some time to mix, which can open you up to attacks.
+        \item Surgery kit that heals allies.
+    \end{itemize}
+    Negatives:
+    \begin{itemize} 
+        \item -20\% Weight. Your chemicals are quite heavy.
+    \end{itemize}
+
+           
+
+            Rough Clan ideas:
+ 
+
+            A clan specialized in the ancient arts, with control over techniques far beyond what was thought to be possible. Possibly best suited might be a buff in elemental attacks, size, cast speed or potency. Another possibility is an ability what let's the user control the base form of Mana without turning it into an element.
+
+            A Clan with pure fighting spirit. always living on edge rather than playing it safe. Perhaps possessing the ability to overdose their blood meter, allowing for extra stamina, agility or regeneration in combat.
+
+            A clan that can summon in elemental shields that can absorb elemental mana and fire them back. Their shields are also highly resistant to physical attacks.
+    
+            The all seeing eye. Allows you to view enemies through walls, watch their mana levels, morale levels and blood levels. A third eye will be opened on your forehead.
+
+            The eye of illusion. Can send emotional signals to the chosen target, causing them to have false visions, unstable morale and more.
+
+            
+            A clan that can take the souls of beasts and force them to fight.
+
+            A clan that can draw on a magical scroll to summon ink beasts.
+
+            A clan that can time their attacks to deal more damage
+            
+
+            
+            
+    \section{ Clans}
+        \subsection{Aquillia Clans}
+
+        \subsubsection{Brain overdrive}
+        A clan with exceptional Mana control, with the ability to place their brain into a state of overdrive, which allows them to 
+        calculate the most likely event and react to attacks quicker. The strain this ability applies to the brain significantly damages morale.
+        
+        \subsubsection{Acceleration control}
+        The user is able to change the acceleration of anything nearby with their mana. They can add or remove acceleration from the nearby object or themselves. Adding a large amount of acceleration at once is impossible for them, so they choose to build it up over time.
+        (Maybe altering acceleration of objects is a progression?)
+
+        
+        
+        \subsection{Falconia Clans}
+        \subsubsection{External Storage Clan}
+            Members of this clan possess the ability to store their mana in an external storage container, with a limit of 5 times the users base. Upon the release of said storage, the user's main mana storage is flooded with the previously stored mana. During this state of overdrive, the user will have rapidly increased regeneration at the cost of high blood and mana loss. The use of this technique puts a lot of strain on the body, thus causing you to cough up blood.
+
+        \subsubsection{Warp clan}
+            A Clan able to Warp Space itself, allowing for quick distance coverage in their line of sight. Mana cost increases with distance, so they usually prefer close range teleportations.
+    
+    \section{Ranged Weapons}
+    \section{Melee Weapons}
+    \section{Element}
+ 
+
+
+
+
+\chapter{Lore}
+
+Faction 1: Aquilla
+Faction 2: Faclonia
+
+
+\end{document}
