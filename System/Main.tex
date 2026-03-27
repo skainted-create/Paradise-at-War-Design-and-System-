@@ -6,6 +6,8 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{tocloft}
+\usepackage{listings}
+\usepackage{xcolor}  % for colors
 
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
@@ -42,6 +44,34 @@
     arrow/.style={-{Latex}}
 }
 
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinelanguage{Lua}{
+    keywords={and, break, do, else, elseif, end, false, for, function,
+              if, in, local, nil, not, or, repeat, return, then, true, until, while},
+    sensitive=true,
+    comment=[l]{--},
+    morecomment=[s]{--[[}{]]},
+    morestring=[b]",
+    morestring=[b]'
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=10pt,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false
+}
+
+
 \begin{document}
 
 % First page
@@ -70,5 +100,16 @@
 \include{Chapters/KnownIssuesAndLimitations}
 \newpage
 \include{Chapters/Appendices}
+
+%modules
+
+\newpage
+\include{Chapters/Modules}
+\section{Shared Modules}
+\newpage
+\section{Client Modules}
+\include{Modules/Client/InputHandler}
+\newpage
+\section{Server Modules}
 
 \end{document}
