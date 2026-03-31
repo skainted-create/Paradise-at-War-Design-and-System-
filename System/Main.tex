@@ -8,6 +8,7 @@
 \usepackage{tocloft}
 \usepackage{listings}
 \usepackage{xcolor}  % for colors
+\usepackage{chngcntr}
 
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
@@ -47,6 +48,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+
 \lstdefinelanguage{Lua}{
     keywords={and, break, do, else, elseif, end, false, for, function,
               if, in, local, nil, not, or, repeat, return, then, true, until, while},
@@ -72,7 +74,11 @@
 }
 
 
+
 \begin{document}
+
+\counterwithin{lstlisting}{subsubsection}
+\renewcommand{\thelstlisting}{\thesubsubsection.\arabic{lstlisting}}
 
 % First page
 \vspace*{256pt}
