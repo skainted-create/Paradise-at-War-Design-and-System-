@@ -1,0 +1,69 @@
+\subsection{Client Entry Point}
+
+\subsubsection{Purpose}
+The purpose of the client entry point is to require every client module in order, and then initialize each client module in the same order.
+
+\subsubsection{Functions}
+
+% Optional overview paragraph
+There are no functions
+
+\subsubsection{Diagram}
+
+
+
+
+\usetikzlibrary{positioning}
+
+\begin{tikzpicture}
+
+% Define your module names here
+\def\modules{
+    Core,
+    Network,
+    Database,
+    Auth,
+    Logging,
+    UI,
+    API,
+    Cache,
+    Config,
+    Metrics,
+    Storage,
+    Security,
+    Scheduler,
+    Parser,
+    Renderer
+}
+
+% Nodes
+\node (get) [process, text width=6cm, align=left] {
+Get all modules:\\
+\small
+\foreach [count=\i] \m in \modules {
+    \i. \m\\
+}
+:(expandable)
+};
+
+\node (require) [process, below=of get.south, yshift=-5mm, text width=5cm, align=center] {
+Require each module
+};
+
+\node (init) [process, below=of require.south, yshift=-5mm, text width=5cm, align=center] {
+Initialize modules
+};
+
+% Arrows
+\draw [arrow] (get) -- (require);
+\draw [arrow] (require) -- (init);
+
+\end{tikzpicture}
+
+\subsubsection{Dependencies}
+
+\subsubsection{Usage-example}
+
+\subsubsection{Known issues and bottle-necks}
+
+\subsubsection{Performance}
