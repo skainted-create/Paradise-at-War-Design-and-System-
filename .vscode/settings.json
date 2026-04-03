@@ -1,6 +1,3 @@
 {
-    "latex-workshop.view.pdf.viewer": "tab",
-    "latex-workshop.view.pdf.invert": 1,
-"latex-workshop.view.pdf.invertMode.enabled": "always"
-
+    "latex-workshop.view.pdf.viewer": "tab"
 }
