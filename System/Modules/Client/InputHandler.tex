@@ -36,6 +36,37 @@ end
 
 \subsubsection{Diagram}
 
+\begin{tikzpicture}
+
+% Nodes
+\node (start) [startstop] {Initialize \& Detect Inputs};
+\node (detect) [decision, below of=start] {Input Detected?};
+\node (processEvent) [decision, below of=detect] {Game Processed Event?};
+\node (handleEvent) [process, right of=processEvent, xshift=4cm] {Handle Game Event};
+\node (checkList) [process, below of=processEvent] {Check Bind List};
+\node (fireFunc) [process, below of=checkList] {Fire Function Repeatedly};
+\node (held) [decision, below of=fireFunc] {Input Still Held?};
+
+% Arrows
+\draw [arrow] (start) -- (detect);
+
+\draw [arrow] (detect) -- node[right] {Yes} (processEvent);
+\draw [arrow] (detect.west) -- ++(-3,0) |- node[left] {No} (detect);
+
+\draw [arrow] (processEvent) -- node[above] {Yes} (handleEvent);
+\draw [arrow] (processEvent) -- node[right] {No} (checkList);
+
+\draw [arrow] (handleEvent) |- (detect);
+
+\draw [arrow] (checkList) -- (fireFunc);
+\draw [arrow] (fireFunc) -- (held);
+
+\draw [arrow] (held) -- node[right] {Yes} (fireFunc);
+\draw [arrow] (held.west) -- ++(-3,0) |- node[left] {No} (detect);
+
+\end{tikzpicture}
+
+
 \subsubsection{Dependencies}
 
 \subsubsection{Usage-example}
